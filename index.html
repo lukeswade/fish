@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="dark light" />
+  <title>Fish | Luke Wade</title>
+  <meta name="description" content="A minimalist fishing hub: conditions, logs, and trip notes." />
+
+  <!-- Social cards -->
+  <meta property="og:title" content="Fish" />
+  <meta property="og:description" content="Conditions, logs, and trip notes." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/hero.jpg" />
+
+  <style>
+    :root{
+      --bg: #070A0F;
+      --panel: rgba(255,255,255,.06);
+      --panel2: rgba(255,255,255,.10);
+      --border: rgba(255,255,255,.14);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
+      --muted2: rgba(255,255,255,.55);
+      --shadow: 0 20px 60px rgba(0,0,0,.55);
+      --radius: 18px;
+      --radius2: 26px;
+      --max: 1120px;
+
+      --accent: #7dd3fc; /* sky */
+      --accent2:#22c55e; /* green */
+      --accent3:#f59e0b; /* amber */
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 700px at 50% -10%, rgba(125,211,252,.20), transparent 60%),
+                  radial-gradient(1000px 600px at 100% 20%, rgba(34,197,94,.12), transparent 60%),
+                  radial-gradient(900px 600px at 0% 60%, rgba(245,158,11,.10), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+      overflow-x:hidden;
+    }
+
+    a{ color:inherit; text-decoration:none; }
+    .wrap{ max-width:var(--max); margin:0 auto; padding:0 18px; }
+
+    /* Top nav */
+    header{
+      position:sticky;
+      top:0;
+      z-index:50;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(to bottom, rgba(7,10,15,.72), rgba(7,10,15,.35));
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .nav{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:14px 0;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      letter-spacing:.2px;
+      font-weight:650;
+    }
+    .badge{
+      width:34px; height:34px; border-radius:12px;
+      background:
+        radial-gradient(12px 12px at 35% 30%, rgba(125,211,252,.95), transparent 60%),
+        radial-gradient(14px 14px at 75% 70%, rgba(34,197,94,.85), transparent 60%),
+        rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow: 0 10px 26px rgba(0,0,0,.35);
+      position:relative;
+    }
+    .badge:after{
+      content:"";
+      position:absolute; inset:8px 9px 9px 8px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.18);
+      opacity:.8;
+    }
+
+    .navlinks{
+      display:flex; gap:16px; align-items:center;
+      color:var(--muted);
+      font-weight:540;
+      font-size:14px;
+    }
+    .navlinks a{ padding:8px 10px; border-radius:12px; }
+    .navlinks a:hover{ background:rgba(255,255,255,.06); color:var(--text); }
+
+    .navcta{
+      display:flex; gap:10px; align-items:center;
+    }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      font-weight:640;
+      font-size:14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+      cursor:pointer;
+      user-select:none;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+    }
+    .btn:hover{ background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.20); transform: translateY(-1px); }
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(125,211,252,.30), rgba(34,197,94,.22));
+      border-color: rgba(125,211,252,.35);
+    }
+    .btn.primary:hover{
+      border-color: rgba(125,211,252,.48);
+      background: linear-gradient(135deg, rgba(125,211,252,.38), rgba(34,197,94,.26));
+    }
+    .btn.icon{
+      padding:10px 11px;
+      width:44px;
+    }
+
+    /* Hero */
+    .hero{
+      position:relative;
+      padding:28px 0 12px;
+    }
+    .heroCard{
+      position:relative;
+      border-radius: var(--radius2);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow: var(--shadow);
+      background: rgba(255,255,255,.05);
+      min-height: 520px;
+      display:flex;
+      align-items:stretch;
+    }
+    .heroMedia{
+      flex: 1.25;
+      position:relative;
+      background: #111;
+    }
+    .heroMedia::before{
+      content:"";
+      position:absolute; inset:0;
+      background-image: url("hero.jpg");
+      background-size: cover;
+      background-position: center;
+      filter: saturate(1.08) contrast(1.05);
+      transform: scale(1.02);
+    }
+    .heroMedia::after{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        linear-gradient(90deg, rgba(7,10,15,.10), rgba(7,10,15,.80) 70%),
+        linear-gradient(180deg, rgba(7,10,15,.20), rgba(7,10,15,.82));
+    }
+
+    .heroContent{
+      flex: 1;
+      position:relative;
+      padding: 28px 26px;
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+      justify-content:center;
+    }
+    .kicker{
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      width:max-content;
+      padding:8px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--muted);
+      font-weight:650;
+      font-size:12px;
+      letter-spacing:.18px;
+    }
+    .dot{
+      width:8px; height:8px; border-radius:99px;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(125,211,252,.14);
+    }
+
+    h1{
+      margin:0;
+      font-size: clamp(32px, 4vw, 48px);
+      letter-spacing: -0.8px;
+      line-height: 1.02;
+    }
+    .sub{
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.5;
+      margin: 0;
+      max-width: 44ch;
+    }
+    .heroActions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top: 6px;
+    }
+
+    .mini{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+    .pill{
+      padding:8px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* Sections */
+    section{ padding: 26px 0; }
+    .grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 16px;
+      align-items: start;
+    }
+    .card{
+      border-radius: var(--radius);
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      box-shadow: 0 14px 36px rgba(0,0,0,.25);
+      padding: 18px;
+      overflow:hidden;
+    }
+    .card h2{
+      margin: 0 0 8px;
+      font-size: 16px;
+      letter-spacing: -0.2px;
+    }
+    .card p{
+      margin:0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .list{
+      margin: 12px 0 0;
+      padding:0;
+      list-style:none;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+    }
+    .row{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding: 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+    }
+    .row .label{ color: var(--muted); font-weight:600; font-size: 13px; }
+    .row .value{ font-weight:700; font-size: 13px; color: rgba(255,255,255,.88); }
+
+    .chips{
+      margin-top: 12px;
+      display:flex;
+      flex-wrap:wrap;
+      gap: 8px;
+    }
+    .chip{
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      padding: 8px 10px;
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+      cursor:pointer;
+      transition: background .12s ease, transform .12s ease;
+    }
+    .chip:hover{ background: rgba(255,255,255,.08); transform: translateY(-1px); }
+
+    /* Modal */
+    .modal{
+      position:fixed; inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 18px;
+      background: rgba(0,0,0,.62);
+      z-index: 100;
+    }
+    .modal.open{ display:flex; }
+    .modalInner{
+      width:min(980px, 100%);
+      border-radius: 22px;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(10,14,20,.94);
+      box-shadow: 0 30px 120px rgba(0,0,0,.70);
+    }
+    .modalTop{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .modalImg{
+      width:100%;
+      display:block;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      background:#111;
+    }
+
+    footer{
+      padding: 26px 0 40px;
+      color: var(--muted2);
+      font-size: 13px;
+    }
+
+    /* Responsive */
+    @media (max-width: 920px){
+      .heroCard{ flex-direction:column; }
+      .heroMedia{ min-height: 360px; }
+      .heroMedia::after{
+        background:
+          linear-gradient(180deg, rgba(7,10,15,.08), rgba(7,10,15,.90) 75%),
+          linear-gradient(90deg, rgba(7,10,15,.18), rgba(7,10,15,.55));
+      }
+      .grid{ grid-template-columns: 1fr; }
+      .navlinks{ display:none; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="wrap">
+      <div class="nav">
+        <div class="brand" aria-label="Site brand">
+          <div class="badge" aria-hidden="true"></div>
+          <div>Fish</div>
+        </div>
+
+        <nav class="navlinks" aria-label="Primary navigation">
+          <a href="#conditions">Conditions</a>
+          <a href="#logs">Logs</a>
+          <a href="#spots">Spots</a>
+        </nav>
+
+        <div class="navcta">
+          <button class="btn icon" id="openPhoto" title="Open photo" aria-label="Open photo">
+            <!-- simple icon -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M4 7a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7Z" stroke="currentColor" stroke-width="2"/>
+              <path d="M8 14l2-2 3 3 2-2 3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 9h.01" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <a class="btn primary" href="#logs">Log a catch</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="hero">
+      <div class="heroCard">
+        <div class="heroMedia" aria-hidden="true"></div>
+
+        <div class="heroContent">
+          <div class="kicker"><span class="dot"></span>On-the-water dashboard</div>
+
+          <h1>Fish, simplified.</h1>
+          <p class="sub">
+            A clean home base for quick conditions, trip notes, and catch logs—built from the cockpit.
+          </p>
+
+          <div class="heroActions">
+            <a class="btn primary" href="#conditions">View conditions</a>
+            <a class="btn" href="#spots">Favorite spots</a>
+            <button class="btn" id="demoBtn" type="button">Open demo log</button>
+          </div>
+
+          <div class="mini" aria-label="Highlights">
+            <div class="pill">Fast</div>
+            <div class="pill">Mobile-first</div>
+            <div class="pill">Single-file deploy</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section id="conditions">
+      <div class="grid">
+        <div class="card">
+          <h2>Today’s snapshot</h2>
+          <p>Replace the placeholders below with real integrations later (NOAA, tides, wind, solunar, etc.).</p>
+
+          <ul class="list" aria-label="Conditions list">
+            <li class="row"><div class="label">Wind</div><div class="value" id="wind">—</div></li>
+            <li class="row"><div class="label">Tide</div><div class="value" id="tide">—</div></li>
+            <li class="row"><div class="label">Water temp</div><div class="value" id="water">—</div></li>
+            <li class="row"><div class="label">Sky</div><div class="value" id="sky">—</div></li>
+          </ul>
+
+          <div class="chips" aria-label="Quick actions">
+            <button class="chip" data-action="refresh">Refresh</button>
+            <button class="chip" data-action="share">Share link</button>
+            <button class="chip" data-action="offline">Offline mode</button>
+          </div>
+        </div>
+
+        <div class="card" id="logs">
+          <h2>Quick log</h2>
+          <p>Lightweight local logging (stored in your browser). No account required.</p>
+
+          <form id="logForm" style="margin-top:12px; display:flex; flex-direction:column; gap:10px;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+              <input id="species" placeholder="Species (e.g., redfish)" autocomplete="off"
+                style="width:100%; padding:12px 12px; border-radius:14px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04); color:var(--text); outline:none;" />
+              <input id="length" placeholder="Length (in)" inputmode="decimal" autocomplete="off"
+                style="width:100%; padding:12px 12px; border-radius:14px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04); color:var(--text); outline:none;" />
+            </div>
+
+            <input id="notes" placeholder="Notes (lure, depth, structure, etc.)" autocomplete="off"
+              style="width:100%; padding:12px 12px; border-radius:14px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04); color:var(--text); outline:none;" />
+
+            <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+              <button class="btn primary" type="submit">Save entry</button>
+              <button class="btn" type="button" id="exportBtn">Export JSON</button>
+              <button class="btn" type="button" id="clearBtn">Clear</button>
+              <span style="color:var(--muted2); font-size:12px;" id="status"></span>
+            </div>
+          </form>
+
+          <div id="entries" style="margin-top:14px; display:flex; flex-direction:column; gap:10px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="spots">
+      <div class="card">
+        <h2>Spots</h2>
+        <p>Use this as a simple list now; expand into a map later.</p>
+
+        <div class="chips" style="margin-top:14px;">
+          <button class="chip" data-spot="Jetty edge">Jetty edge</button>
+          <button class="chip" data-spot="Grass line">Grass line</button>
+          <button class="chip" data-spot="Oyster reef">Oyster reef</button>
+          <button class="chip" data-spot="Bridge pilings">Bridge pilings</button>
+          <button class="chip" data-spot="Drop-off">Drop-off</button>
+        </div>
+
+        <div style="margin-top:14px; color:var(--muted); font-size:14px;">
+          Selected: <span id="spotOut" style="color:rgba(255,255,255,.85); font-weight:700;">—</span>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div style="display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+        <div>© <span id="year"></span> fish.lukewade.net</div>
+        <div style="opacity:.9;">Built as a single-file Cloudflare Pages SPA.</div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Photo modal -->
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Photo viewer">
+    <div class="modalInner">
+      <div class="modalTop">
+        <div>Boat run • two co-pilots • bluebird day</div>
+        <button class="btn icon" id="closeModal" aria-label="Close photo">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <img class="modalImg" src="hero.jpg" alt="Boat cockpit on open water with two dogs on the bow." />
+    </div>
+  </div>
+
+  <script>
+    // Simple placeholders so the page feels “alive” without external APIs yet.
+    const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+    const fmtNow = () => new Date().toLocaleString([], { weekday:'short', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
+
+    function refreshConditions(){
+      const winds = ["NE 8–12 mph", "E 5–9 mph", "SE 10–16 mph", "Calm 0–4 mph"];
+      const tides = ["Incoming", "High slack", "Outgoing", "Low slack"];
+      const water = ["62°F", "68°F", "71°F", "74°F"];
+      const skies = ["Clear", "Mostly clear", "High thin clouds", "Bright sun"];
+      document.getElementById("wind").textContent = pick(winds);
+      document.getElementById("tide").textContent = pick(tides) + " • " + fmtNow();
+      document.getElementById("water").textContent = pick(water);
+      document.getElementById("sky").textContent = pick(skies);
+    }
+
+    // Local log storage
+    const KEY = "fish_logs_v1";
+    const $ = (id) => document.getElementById(id);
+
+    function loadLogs(){
+      try { return JSON.parse(localStorage.getItem(KEY) || "[]"); }
+      catch { return []; }
+    }
+    function saveLogs(logs){
+      localStorage.setItem(KEY, JSON.stringify(logs));
+    }
+    function renderLogs(){
+      const logs = loadLogs();
+      const host = $("entries");
+      host.innerHTML = "";
+      if(!logs.length){
+        host.innerHTML = '<div class="row"><div class="label">No entries yet</div><div class="value">Add your first log.</div></div>';
+        return;
+      }
+      logs.slice().reverse().forEach((e, idx) => {
+        const el = document.createElement("div");
+        el.className = "row";
+        el.innerHTML = `
+          <div style="display:flex; flex-direction:column; gap:4px;">
+            <div style="font-weight:800; color:rgba(255,255,255,.90);">${escapeHtml(e.species || "Catch")}${e.length ? " • " + escapeHtml(e.length) + " in" : ""}</div>
+            <div style="color:rgba(255,255,255,.62); font-size:12px;">${escapeHtml(e.when)}</div>
+            ${e.notes ? `<div style="color:rgba(255,255,255,.70); font-size:13px;">${escapeHtml(e.notes)}</div>` : ""}
+          </div>
+          <button class="btn icon" title="Delete" aria-label="Delete entry" data-del="${logs.length-1-idx}">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M6 7h12M10 7V5h4v2m-7 0l1 14h8l1-14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        `;
+        host.appendChild(el);
+      });
+
+      host.querySelectorAll("[data-del]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const i = Number(btn.getAttribute("data-del"));
+          const logs = loadLogs();
+          logs.splice(i, 1);
+          saveLogs(logs);
+          setStatus("Deleted.");
+          renderLogs();
+        });
+      });
+    }
+
+    function setStatus(msg){
+      $("status").textContent = msg || "";
+      if(msg) setTimeout(() => $("status").textContent = "", 2200);
+    }
+
+    function exportLogs(){
+      const data = loadLogs();
+      const blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "fish-logs.json";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, (m) => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"
+      }[m]));
+    }
+
+    // Modal behavior
+    function openModal(){ $("modal").classList.add("open"); }
+    function closeModal(){ $("modal").classList.remove("open"); }
+
+    // Init
+    document.addEventListener("DOMContentLoaded", () => {
+      $("year").textContent = new Date().getFullYear();
+      refreshConditions();
+      renderLogs();
+
+      $("logForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const species = $("species").value.trim();
+        const length = $("length").value.trim();
+        const notes = $("notes").value.trim();
+        if(!species && !length && !notes){
+          setStatus("Nothing to save.");
+          return;
+        }
+        const logs = loadLogs();
+        logs.push({ species, length, notes, when: new Date().toLocaleString() });
+        saveLogs(logs);
+        $("species").value = "";
+        $("length").value = "";
+        $("notes").value = "";
+        setStatus("Saved.");
+        renderLogs();
+      });
+
+      $("exportBtn").addEventListener("click", exportLogs);
+      $("clearBtn").addEventListener("click", () => {
+        localStorage.removeItem(KEY);
+        setStatus("Cleared.");
+        renderLogs();
+      });
+
+      document.querySelectorAll("[data-action]").forEach(el => {
+        el.addEventListener("click", async () => {
+          const a = el.getAttribute("data-action");
+          if(a === "refresh"){ refreshConditions(); setStatus("Refreshed."); }
+          if(a === "share"){
+            try{
+              await navigator.clipboard.writeText(location.href);
+              setStatus("Link copied.");
+            } catch {
+              setStatus("Copy failed (browser permission).");
+            }
+          }
+          if(a === "offline"){ setStatus("Tip: Add PWA later if you want true offline."); }
+        });
+      });
+
+      document.querySelectorAll("[data-spot]").forEach(el => {
+        el.addEventListener("click", () => $("spotOut").textContent = el.getAttribute("data-spot"));
+      });
+
+      $("openPhoto").addEventListener("click", openModal);
+      $("closeModal").addEventListener("click", closeModal);
+      $("modal").addEventListener("click", (e) => { if(e.target === $("modal")) closeModal(); });
+
+      $("demoBtn").addEventListener("click", () => {
+        const logs = loadLogs();
+        logs.push({
+          species: "Redfish",
+          length: "24",
+          notes: "Paddle-tail, 1/8oz jig, edge of grass line. Short drift, light wind.",
+          when: new Date().toLocaleString()
+        });
+        saveLogs(logs);
+        setStatus("Demo entry added.");
+        renderLogs();
+        location.hash = "#logs";
+      });
+    });
+  </script>
+</body>
+</html>
